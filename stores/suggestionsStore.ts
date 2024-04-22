@@ -2,8 +2,6 @@ import {defineStore} from 'pinia';
 import {computed, ref, unref} from "vue";
 import {StaticSuggestionIdent, Suggestion, SuggestionState} from "src/suggestions/models/Suggestion";
 import _ from "lodash";
-import PersistenceService from "src/services/PersistenceService";
-import IndexedDbStorage from "src/windows/persistence/IndexedDbStorage";
 import IndexedDbSuggestionsPersistence from "src/suggestions/persistence/IndexedDbSuggestionsPersistence";
 
 let storage = IndexedDbSuggestionsPersistence
