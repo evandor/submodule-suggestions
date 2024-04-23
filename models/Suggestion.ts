@@ -39,12 +39,6 @@ export class Suggestion {
   public created: number | undefined = undefined
 
   static staticSuggestions: Suggestion[] = [
-    new Suggestion(StaticSuggestionIdent.TRY_TAB_DETAILS_FEATURE.toString(),
-      "Want to try a new feature?",
-      "Maybe you want to try the optional 'Display Tab Details' feature?",
-      "/features/details",
-      SuggestionType.FEATURE)
-      .setImage('o_info'),
     new Suggestion(StaticSuggestionIdent.TRY_BOOKMARKS_FEATURE,
       "Want to try a new feature?",
       "Maybe you want to try the optional 'Bookmarks' feature?",
