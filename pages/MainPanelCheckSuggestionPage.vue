@@ -217,7 +217,7 @@ import {IgnoreSuggestionCommand} from "src/suggestions/commands/IgnoreSuggestion
 import NavigationService from "src/services/NavigationService";
 import PdfService from "src/services/PdfService";
 import ContentUtils from "src/utils/ContentUtils";
-import {Tab} from "src/models/Tab";
+import {Tab} from "src/tabsets/models/Tab";
 import {SavedBlob} from "src/models/SavedBlob";
 import pixelmatch from "pixelmatch";
 // @ts-ignore
