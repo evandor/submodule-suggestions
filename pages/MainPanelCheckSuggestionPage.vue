@@ -232,6 +232,7 @@ import {MonitoringType} from "src/models/Monitor";
 import {useUtils} from "src/services/Utils";
 import {NotificationType} from "src/services/ErrorHandler";
 import AppService from "src/services/AppService";
+import {useTabsetsStore} from "src/tabsets/stores/tabsetsStore";
 
 const {sendMsg} = useUtils()
 
