@@ -34,7 +34,7 @@ export class ApplySuggestionCommand implements Command<any> {
           const d = useTabsStore().getTabAndTabsetId(tab.id)
           console.log("updating tab's url to", tab.url, d)
           if (d && d.tabsetId) {
-            const tabset = useTabsetService().getTabset(d.tabsetId)
+            const tabset = useTabsetsStore().getTabset(d.tabsetId)
             if (tabset) {
               useTabsetService().saveTabset(tabset)
             }
