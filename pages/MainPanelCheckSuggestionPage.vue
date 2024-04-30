@@ -487,11 +487,11 @@ const onScrollThird = ({verticalPosition}: any) => {
 const stopMonitoring = () => {
   const tabId = suggestion.value?.data['tabId' as keyof object]
   if (tabId) {
-    const res = useTabsStore().getTabAndTabsetId(tabId)
+    const res = useTabsetsStore().getTabAndTabsetId(tabId)
     if (res) {
       useCommandExecutor().executeFromUi(new UpdateMonitoringCommand(res.tab, MonitoringType.NONE, false, {}))
       useTabsetService().saveCurrentTabset()
-      const tabsetId = useTabsStore().getTabAndTabsetId(tabId)?.tabsetId
+      const tabsetId = useTabsetsStore().getTabAndTabsetId(tabId)?.tabsetId
       sendMsg('reload-tabset', {tabsetId})
     }
   }
@@ -506,7 +506,7 @@ const deleteNotification = async () => {
     pngs.forEach(p => PdfService.deleteBlob(tabId, p.id))
     useSuggestionsStore().removeSuggestion(suggestion.value?.id)
       .then(() => {
-        const tabsetId = useTabsStore().getTabAndTabsetId(tabId)?.tabsetId
+        const tabsetId = useTabsetsStore().getTabAndTabsetId(tabId)?.tabsetId
         sendMsg('reload-suggestions', {tabsetId})
         closeWindow()
       })
@@ -516,7 +516,7 @@ const deleteNotification = async () => {
 const isMonitoring = () => {
   const tabId = suggestion.value?.data['tabId' as keyof object]
   if (tabId) {
-    const res = useTabsStore().getTabAndTabsetId(tabId)
+    const res = useTabsetsStore().getTabAndTabsetId(tabId)
     console.log("restabmonitor", tabId, res?.tab.monitor)
     return res?.tab?.monitor
   }
