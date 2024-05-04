@@ -119,16 +119,16 @@
         <div class="col">
 
           <template v-if="!decided">
-            <q-btn v-if="isMonitoring()" label="Stop Monitoring" class="q-mr-md" size="sm" @click="stopMonitoring()">
-              <q-tooltip class="tooltip-small" :delay="500">Stop Monitoring this website</q-tooltip>
-            </q-btn>
+<!--            <q-btn v-if="isMonitoring()" label="Stop Monitoring" class="q-mr-md" size="sm" @click="stopMonitoring()">-->
+<!--              <q-tooltip class="tooltip-small" :delay="500">Stop Monitoring this website</q-tooltip>-->
+<!--            </q-btn>-->
             <q-btn label="Reset Monitoring" class="q-mr-md"
                    size="sm" color="warning" @click="applySuggestion"></q-btn>
             <q-btn v-if="pngs.length === 1"
                    label="Compare with Current" class="q-mr-md"
                    size="sm" color="positive" @click="createImageToCompare()"></q-btn>
-            <q-btn label="Delete Notification" class="q-mr-md"
-                   size="sm" color="negative" @click="deleteNotification"></q-btn>
+<!--            <q-btn label="Delete Notification" class="q-mr-md"-->
+<!--                   size="sm" color="negative" @click="deleteNotification"></q-btn>-->
           </template>
           <template v-else>
             <q-btn label="Close Window" class="q-mr-md" size="sm" @click="closeWindow()"/>
@@ -217,7 +217,6 @@ import {IgnoreSuggestionCommand} from "src/suggestions/commands/IgnoreSuggestion
 import NavigationService from "src/services/NavigationService";
 import PdfService from "src/services/PdfService";
 import ContentUtils from "src/utils/ContentUtils";
-import {Tab} from "src/tabsets/models/Tab";
 import {SavedBlob} from "src/models/SavedBlob";
 import pixelmatch from "pixelmatch";
 // @ts-ignore
@@ -225,16 +224,8 @@ import {PNG} from "pngjs/browser";
 
 import {Buffer} from 'buffer/'
 import {PNGWithMetadata} from "pngjs";
-import {useTabsStore} from "stores/tabsStore";
-import {useTabsetService} from "src/services/TabsetService2";
-import {UpdateMonitoringCommand} from "src/domain/monitoring/UpdateMonitoringCommand";
-import {MonitoringType} from "src/models/Monitor";
 import {useUtils} from "src/services/Utils";
 import {NotificationType} from "src/services/ErrorHandler";
-import AppService from "src/services/AppService";
-import {useTabsetsStore} from "src/tabsets/stores/tabsetsStore";
-
-const {sendMsg} = useUtils()
 
 const route = useRoute()
 
@@ -278,9 +269,9 @@ function createImage(imageUrl: string, selector: string) {
 watchEffect(async () => {
   suggestionId.value = route.params.suggestionId as string
   if (suggestionId.value) {
-    suggestion.value = useSuggestionsStore().getSuggestion(suggestionId.value)
+    suggestion.value = useSuggestionsStore().getSuggestion(suggestionId.value) as Suggestion
     console.log("got suggestion", suggestion.value)
-    if (suggestion.value && suggestion.type === SuggestionType.CONTENT_CHANGE) {
+    if (suggestion.value && suggestion.value.type === SuggestionType.CONTENT_CHANGE) {
       const tabId = suggestion.value['data' as keyof object]['tabId' as keyof object]
       console.log("got tabId", tabId)
       pngs.value = await PdfService.getPngsForTab(tabId)
@@ -435,7 +426,7 @@ const createImageToCompare = async () => {
                 console.log("res", res, typeof res)
                 console.log("res2", typeof res.data)
                 const tab = new Tab(suggestion.value?.data['tabId' as keyof object] || '', tempTab)
-                PdfService.saveBlob(tab, res.data, 'PNG', 'monitoring snapshot')
+                //PdfService.saveBlob(tab, res.data, 'PNG', 'monitoring snapshot')
                 setTimeout(() => chrome.tabs.remove(tempTab.id || 0), 2000)
               }).catch((err: any) => {
                 //return handleError(err)
@@ -460,16 +451,16 @@ function scroll(source: any, position: any) {
       'third' :
       'first'
 
-  if (source === 'first') {
-    secondRef.value?.setScrollPosition('vertical', position)
-    thirdRef.value?.setScrollPosition('vertical', position)
-  } else if (source === 'second') {
-    firstRef.value?.setScrollPosition('vertical', position)
-    thirdRef.value?.setScrollPosition('vertical', position)
-  } else if (source === 'third') {
-    firstRef.value?.setScrollPosition('vertical', position)
-    secondRef.value?.setScrollPosition('vertical', position)
-  }
+  // if (source === 'first') {
+  //   secondRef.value?.setScrollPosition('vertical', position)
+  //   thirdRef.value?.setScrollPosition('vertical', position)
+  // } else if (source === 'second') {
+  //   firstRef.value?.setScrollPosition('vertical', position)
+  //   thirdRef.value?.setScrollPosition('vertical', position)
+  // } else if (source === 'third') {
+  //   firstRef.value?.setScrollPosition('vertical', position)
+  //   secondRef.value?.setScrollPosition('vertical', position)
+  // }
 }
 
 
@@ -485,43 +476,43 @@ const onScrollThird = ({verticalPosition}: any) => {
   scroll('third', verticalPosition)
 }
 
-const stopMonitoring = () => {
-  const tabId = suggestion.value?.data['tabId' as keyof object]
-  if (tabId) {
-    const res = useTabsetsStore().getTabAndTabsetId(tabId)
-    if (res) {
-      useCommandExecutor().executeFromUi(new UpdateMonitoringCommand(res.tab, MonitoringType.NONE, false, {}))
-      useTabsetService().saveCurrentTabset()
-      const tabsetId = useTabsetsStore().getTabAndTabsetId(tabId)?.tabsetId
-      sendMsg('reload-tabset', {tabsetId})
-    }
-  }
-}
+// const stopMonitoring = () => {
+//   const tabId = suggestion.value?.data['tabId' as keyof object]
+//   if (tabId) {
+//     const res = useTabsetsStore().getTabAndTabsetId(tabId)
+//     if (res) {
+//       useCommandExecutor().executeFromUi(new UpdateMonitoringCommand(res.tab, MonitoringType.NONE, false, {}))
+//       useTabsetService().saveCurrentTabset()
+//       const tabsetId = useTabsetsStore().getTabAndTabsetId(tabId)?.tabsetId
+//       sendMsg('reload-tabset', {tabsetId})
+//     }
+//   }
+// }
 
 // TODO this needs to become more advanced. Merge MHTML storage with BLOBS
-const deleteNotification = async () => {
-  if (suggestion.value) {
-    console.log("deleting suggestion", suggestion.value)
-    const tabId = suggestion.value.data['tabId' as keyof object]
-    const pngs = await PdfService.getPngsForTab(tabId)
-    pngs.forEach(p => PdfService.deleteBlob(tabId, p.id))
-    useSuggestionsStore().removeSuggestion(suggestion.value?.id)
-      .then(() => {
-        const tabsetId = useTabsetsStore().getTabAndTabsetId(tabId)?.tabsetId
-        sendMsg('reload-suggestions', {tabsetId})
-        closeWindow()
-      })
-  }
-}
+// const deleteNotification = async () => {
+//   if (suggestion.value) {
+//     console.log("deleting suggestion", suggestion.value)
+//     const tabId = suggestion.value.data['tabId' as keyof object]
+//     const pngs = await PdfService.getPngsForTab(tabId)
+//     pngs.forEach(p => PdfService.deleteBlob(tabId, p.id))
+//     useSuggestionsStore().removeSuggestion(suggestion.value?.id)
+//       .then(() => {
+//         const tabsetId = useTabsetsStore().getTabAndTabsetId(tabId)?.tabsetId
+//         sendMsg('reload-suggestions', {tabsetId})
+//         closeWindow()
+//       })
+//   }
+// }
 
-const isMonitoring = () => {
-  const tabId = suggestion.value?.data['tabId' as keyof object]
-  if (tabId) {
-    const res = useTabsetsStore().getTabAndTabsetId(tabId)
-    console.log("restabmonitor", tabId, res?.tab.monitor)
-    return res?.tab?.monitor
-  }
-  return false
-}
+// const isMonitoring = () => {
+//   const tabId = suggestion.value?.data['tabId' as keyof object]
+//   if (tabId) {
+//     const res = useTabsetsStore().getTabAndTabsetId(tabId)
+//     console.log("restabmonitor", tabId, res?.tab.monitor)
+//     return res?.tab?.monitor
+//   }
+//   return false
+// }
 
 </script>
