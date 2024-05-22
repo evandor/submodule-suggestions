@@ -1,5 +1,4 @@
 import _ from "lodash"
-import {RELEASE_NOTES_URL} from "boot/constants";
 
 export enum SuggestionState {
   NEW = "NEW",
@@ -93,6 +92,6 @@ export class Suggestion {
 
   static getStaticSuggestion(ident: StaticSuggestionIdent): Suggestion | undefined {
     //console.log("hier", this.staticSuggestions, ident)
-    return _.find(this.staticSuggestions, s => s.id === ident)
+    return _.find(this.staticSuggestions, (s:any) => s.id === ident)
   }
 }

@@ -60,7 +60,7 @@ export const useSuggestionsStore = defineStore('suggestions', () => {
     }
     return storage.removeSuggestion(ident)
       .then(() => {
-        suggestions.value = _.filter(suggestions.value, s => s.id !== ident)
+        suggestions.value = _.filter(suggestions.value, (s:any) => s.id !== ident)
         console.log("suggestions set to ", suggestions.value)
       })
   }
@@ -93,11 +93,11 @@ export const useSuggestionsStore = defineStore('suggestions', () => {
   })
 
   const getSuggestion = computed(() => {
-    return (suggestionId: string) => _.find(suggestions.value, s => s.id === suggestionId)
+    return (suggestionId: string) => _.find(suggestions.value, (s:any) => s.id === suggestionId)
   })
 
   const getSuggestionForUrl = computed(() => {
-    return (url: string) => _.find(suggestions.value, s => s.id === btoa(url))
+    return (url: string) => _.find(suggestions.value, (s:any) => s.id === btoa(url))
   })
 
 

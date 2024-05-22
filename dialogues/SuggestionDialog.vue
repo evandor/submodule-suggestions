@@ -44,7 +44,6 @@ import {useRouter} from "vue-router";
 import {useSuggestionsStore} from "src/suggestions/stores/suggestionsStore";
 import {Suggestion, SuggestionState, SuggestionType} from "src/suggestions/models/Suggestion";
 import NavigationService from "src/core/services/NavigationService";
-import AppService from "src/services/AppService";
 
 defineEmits([
   ...useDialogPluginComponent.emits
@@ -102,7 +101,7 @@ const addSuggestion = () => {
 
 const restart = () => {
   useSuggestionsStore().removeSuggestion(props.suggestion.id)
-  AppService.restart("restarted=true")
+  //AppService.restart("restarted=true")
 }
 
 </script>
