@@ -1,7 +1,6 @@
 import {IDBPDatabase, openDB, deleteDB} from "idb";
 import _ from "lodash";
 import {useUiStore} from "src/stores/uiStore";
-import {Window} from "src/windows/models/Window";
 import {Suggestion, SuggestionState, SuggestionType} from "src/suggestions/models/Suggestion";
 
 class IndexedDbSuggestionsPersistence {
