@@ -206,7 +206,7 @@
 <script lang="ts" setup>
 
 import {onMounted, ref, watchEffect} from "vue";
-import Analytics from "src/utils/google-analytics";
+import Analytics from "src/core/utils/google-analytics";
 import {useRoute} from "vue-router";
 import {date} from "quasar";
 import {useCommandExecutor} from "src/core/services/CommandExecutor";
