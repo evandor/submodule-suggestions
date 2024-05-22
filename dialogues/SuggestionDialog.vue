@@ -43,7 +43,7 @@ import {openURL, useDialogPluginComponent} from "quasar";
 import {useRouter} from "vue-router";
 import {useSuggestionsStore} from "src/suggestions/stores/suggestionsStore";
 import {Suggestion, SuggestionState, SuggestionType} from "src/suggestions/models/Suggestion";
-import NavigationService from "src/services/NavigationService";
+import NavigationService from "src/core/services/NavigationService";
 import AppService from "src/services/AppService";
 
 defineEmits([
