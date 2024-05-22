@@ -225,7 +225,7 @@ import {PNG} from "pngjs/browser";
 import {Buffer} from 'buffer/'
 import {PNGWithMetadata} from "pngjs";
 import {useUtils} from "src/core/services/Utils";
-import {NotificationType} from "src/services/ErrorHandler";
+import {NotificationType} from "src/core/services/ErrorHandler";
 
 const route = useRoute()
 
