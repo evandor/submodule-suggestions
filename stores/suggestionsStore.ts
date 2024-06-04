@@ -11,7 +11,7 @@ export const useSuggestionsStore = defineStore('suggestions', () => {
   const suggestions = ref<Suggestion[]>([])
 
   async function init() {
-    console.debug(" ...initializing SuggestionsService")
+    console.debug(" ...initializing SuggestionsService (IndexedDbSuggestionsPersistence)")
     await storage.init()
     loadSuggestionsFromDb()
     // await setup("initialization")
