@@ -215,7 +215,7 @@ import {useSuggestionsStore} from "src/suggestions/stores/suggestionsStore";
 import {ApplySuggestionCommand} from "src/suggestions/commands/ApplySuggestionCommand";
 import {IgnoreSuggestionCommand} from "src/suggestions/commands/IgnoreSuggestionCommand";
 import NavigationService from "src/services/NavigationService";
-// import PdfService from "src/services/PdfService";
+// import PdfService from "src/snapshots/services/PdfService";
 // import ContentUtils from "src/utils/ContentUtils";
 // import {SavedBlob} from "src/models/SavedBlob";
 // import pixelmatch from "pixelmatch";
