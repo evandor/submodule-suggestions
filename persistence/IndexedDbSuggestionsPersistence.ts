@@ -10,7 +10,7 @@ class IndexedDbSuggestionsPersistence {
   private db: IDBPDatabase = null as unknown as IDBPDatabase
 
   async init() {
-    console.log(" ...initializing suggestions IndexedDbStorage database")
+    console.debug(" ...initializing suggestions IndexedDbStorage database")
     this.db = await this.initDatabase()
     useUiStore().dbReady = true
     return Promise.resolve("")
