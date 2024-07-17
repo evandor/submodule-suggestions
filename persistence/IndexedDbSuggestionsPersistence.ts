@@ -10,14 +10,13 @@ class IndexedDbSuggestionsPersistence {
   private db: IDBPDatabase = null as unknown as IDBPDatabase
 
   async init() {
-    console.debug(" ...initializing suggestions IndexedDbStorage database")
     this.db = await this.initDatabase()
     useUiStore().dbReady = true
+    console.debug(` ...initialized suggestions: DB`,'✅')
     return Promise.resolve("")
   }
 
   private async initDatabase(): Promise<IDBPDatabase> {
-    console.debug(" ...about to initialize indexedDB (Suggestions)")
     const ctx = this
     return await openDB("suggestionsDB", 1, {
       // upgrading see https://stackoverflow.com/questions/50193906/create-index-on-already-existing-objectstore
