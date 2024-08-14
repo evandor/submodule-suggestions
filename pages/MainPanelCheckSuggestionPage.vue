@@ -415,7 +415,7 @@ const createImageToCompare = async () => {
       if (tempTab && tempTab.id) {
         chrome.tabs.sendMessage(
           tempTab.id,
-          "getContent",
+          "getExcerpt",
           {},
           (res) => {
             console.log("getContent returned result with length", res?.content?.length)
