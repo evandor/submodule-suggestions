@@ -52,7 +52,7 @@ export class Suggestion {
       .setImage('o_space_dashboard'),
     new Suggestion(StaticSuggestionIdent.TRY_NEWEST_TABS_FEATURE,
       "Want to try a new feature?",
-      "Activate a view with your newest tabs",
+      "Activate a view with your latest tabs",
       "/features/newest_tabs",
       SuggestionType.FEATURE)
       .setImage('o_schedule'),
