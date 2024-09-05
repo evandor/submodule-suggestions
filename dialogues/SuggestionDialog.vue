@@ -54,6 +54,7 @@ const props = defineProps({
   fromPanel: {type: Boolean, default: false}
 })
 
+// @ts-ignore
 const {dialogRef, onDialogHide, onDialogCancel} = useDialogPluginComponent()
 
 const router = useRouter()

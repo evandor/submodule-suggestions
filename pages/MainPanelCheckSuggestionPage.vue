@@ -222,7 +222,6 @@ import NavigationService from "src/services/NavigationService";
 // @ts-ignore
 import {PNG} from "pngjs/browser";
 
-import {Buffer} from 'buffer/'
 // import {PNGWithMetadata} from "pngjs";
 import {NotificationType} from "src/core/services/ErrorHandler";
 
@@ -232,15 +231,7 @@ const suggestionId = ref<string | undefined>(undefined)
 const suggestion = ref<Suggestion | undefined>(undefined)
 // const pngs = ref<SavedBlob[]>([])
 const decided = ref(false)
-const firstRef = ref(null)
-const secondRef = ref(null)
-const thirdRef = ref(null)
 const diff = ref<PNG | undefined>(undefined)
-
-const thumbStyle = ref({right: '4px', borderRadius: '7px', backgroundColor: '#027be3', width: '4px', opacity: 0.75})
-const barStyle = ref({right: '2px', borderRadius: '9px', backgroundColor: 'white', width: '8px', opacity: 0.2})
-
-let ignoreSource: string | null = null
 
 onMounted(() => {
   Analytics.firePageViewEvent('MainPanelCheckSuggestionPage', document.location.href);
@@ -251,19 +242,6 @@ watchEffect(() => {
     console.log("got diff", diff)
   }
 })
-
-function createImage(imageUrl: string, selector: string) {
-  const img1: HTMLImageElement | null = document.querySelector(selector)
-  if (img1) {
-    img1.src = imageUrl;
-    img1.onload = function () {
-      var w = img1.width;
-      var h = img1.height;
-      console.log("NEW IMAGE width", w);
-      console.log("NEW IMAGE height: ", h);
-    }
-  }
-}
 
 watchEffect(async () => {
   suggestionId.value = route.params.suggestionId as string
@@ -391,127 +369,5 @@ const ignoreSuggestion = () => {
       .then(() => decided.value = true)
   }
 }
-
-const oldSnapshot = () => {
-  return "chrome-extension://pndffocijjfpmphlhkoijmpfckjafdpl/www/index.html#/mainpanel/mhtml/7b961cb4-243f-430a-b28e-0e9421febdc2"
-}
-
-const oldPng = async () => {
-
-}
-
-const createImageToCompare = async () => {
-  if (suggestion.value?.url) {
-    //NavigationService.openOrCreateTab([suggestion.value?.url], undefined, undefined, true)
-    const tempTab = await chrome.tabs.create({
-      active: true,
-      pinned: false,
-      url: suggestion.value?.url
-    })
-    console.log("created temporary tab", suggestion.value?.url, tempTab)
-
-    setTimeout(() => {
-
-      if (tempTab && tempTab.id) {
-        chrome.tabs.sendMessage(
-          tempTab.id,
-          "getExcerpt",
-          {},
-          (res) => {
-            console.log("getContent returned result with length", res?.content?.length)
-            // let html = ContentUtils.setBaseHref(suggestion.value?.url || '', res.content)
-            // return PdfService.screenshotFrom(html)
-            //   .then((res: any) => {
-            //     console.log("res", res, typeof res)
-            //     console.log("res2", typeof res.data)
-            //     const tab = new Tab(suggestion.value?.data['tabId' as keyof object] || '', tempTab)
-            //     //PdfService.saveBlob(tab, res.data, 'PNG', 'monitoring snapshot')
-            //     setTimeout(() => chrome.tabs.remove(tempTab.id || 0), 2000)
-            //   }).catch((err: any) => {
-            //     //return handleError(err)
-            //     console.log("got error", err)
-            //     setTimeout(() => chrome.tabs.remove(tempTab.id || 0), 2000)
-            //   })
-          })
-      }
-    }, 2000)
-  }
-}
-
-function scroll(source: any, position: any) {
-  if (ignoreSource === source) {
-    ignoreSource = null
-    return
-  }
-
-  ignoreSource = source === 'first'
-    ? 'second'
-    : source === 'second' ?
-      'third' :
-      'first'
-
-  // if (source === 'first') {
-  //   secondRef.value?.setScrollPosition('vertical', position)
-  //   thirdRef.value?.setScrollPosition('vertical', position)
-  // } else if (source === 'second') {
-  //   firstRef.value?.setScrollPosition('vertical', position)
-  //   thirdRef.value?.setScrollPosition('vertical', position)
-  // } else if (source === 'third') {
-  //   firstRef.value?.setScrollPosition('vertical', position)
-  //   secondRef.value?.setScrollPosition('vertical', position)
-  // }
-}
-
-
-const onScrollFirst = ({verticalPosition}: any) => {
-  scroll('first', verticalPosition)
-}
-
-const onScrollSecond = ({verticalPosition}: any) => {
-  scroll('second', verticalPosition)
-}
-
-const onScrollThird = ({verticalPosition}: any) => {
-  scroll('third', verticalPosition)
-}
-
-// const stopMonitoring = () => {
-//   const tabId = suggestion.value?.data['tabId' as keyof object]
-//   if (tabId) {
-//     const res = useTabsetsStore().getTabAndTabsetId(tabId)
-//     if (res) {
-//       useCommandExecutor().executeFromUi(new UpdateMonitoringCommand(res.tab, MonitoringType.NONE, false, {}))
-//       useTabsetService().saveCurrentTabset()
-//       const tabsetId = useTabsetsStore().getTabAndTabsetId(tabId)?.tabsetId
-//       sendMsg('reload-tabset', {tabsetId})
-//     }
-//   }
-// }
-
-// TODO this needs to become more advanced. Merge MHTML storage with BLOBS
-// const deleteNotification = async () => {
-//   if (suggestion.value) {
-//     console.log("deleting suggestion", suggestion.value)
-//     const tabId = suggestion.value.data['tabId' as keyof object]
-//     const pngs = await PdfService.getPngsForTab(tabId)
-//     pngs.forEach(p => PdfService.deleteBlob(tabId, p.id))
-//     useSuggestionsStore().removeSuggestion(suggestion.value?.id)
-//       .then(() => {
-//         const tabsetId = useTabsetsStore().getTabAndTabsetId(tabId)?.tabsetId
-//         sendMsg('reload-suggestions', {tabsetId})
-//         closeWindow()
-//       })
-//   }
-// }
-
-// const isMonitoring = () => {
-//   const tabId = suggestion.value?.data['tabId' as keyof object]
-//   if (tabId) {
-//     const res = useTabsetsStore().getTabAndTabsetId(tabId)
-//     console.log("restabmonitor", tabId, res?.tab.monitor)
-//     return res?.tab?.monitor
-//   }
-//   return false
-// }
 
 </script>

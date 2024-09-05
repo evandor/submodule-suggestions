@@ -1,6 +1,6 @@
 import {defineStore} from 'pinia';
-import {computed, ref, unref} from "vue";
-import {StaticSuggestionIdent, Suggestion, SuggestionState} from "src/suggestions/models/Suggestion";
+import {computed, ref} from "vue";
+import {Suggestion, SuggestionState} from "src/suggestions/models/Suggestion";
 import _ from "lodash";
 import IndexedDbSuggestionsPersistence from "src/suggestions/persistence/IndexedDbSuggestionsPersistence";
 
