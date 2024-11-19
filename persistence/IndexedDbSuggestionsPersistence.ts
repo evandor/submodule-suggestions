@@ -1,6 +1,5 @@
 import {IDBPDatabase, openDB} from "idb";
 import _ from "lodash";
-import {useUiStore} from "src/ui/stores/uiStore";
 import {Suggestion, SuggestionState, SuggestionType} from "src/suggestions/models/Suggestion";
 
 class IndexedDbSuggestionsPersistence {
@@ -11,7 +10,6 @@ class IndexedDbSuggestionsPersistence {
 
   async init() {
     this.db = await this.initDatabase()
-    useUiStore().dbReady = true
     console.debug(` ...initialized suggestions: DB`,'✅')
     return Promise.resolve("")
   }
