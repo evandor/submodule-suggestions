@@ -54,7 +54,6 @@ const props = defineProps({
   fromPanel: {type: Boolean, default: false}
 })
 
-// @ts-expect-error
 const {dialogRef, onDialogHide, onDialogCancel} = useDialogPluginComponent()
 
 const router = useRouter()

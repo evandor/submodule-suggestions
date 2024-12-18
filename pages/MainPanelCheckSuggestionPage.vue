@@ -219,7 +219,6 @@ import NavigationService from "src/services/NavigationService";
 // import ContentUtils from "src/core/utils/ContentUtils";
 // import {SavedBlob} from "src/models/SavedBlob";
 // import pixelmatch from "pixelmatch";
-// @ts-expect-error
 import {PNG} from "pngjs/browser";
 
 // import {PNGWithMetadata} from "pngjs";
