@@ -47,12 +47,14 @@ export class ApplySuggestionCommand implements Command<any> {
           // a feature suggestion should not appear again
           useSuggestionsStore().updateSuggestionState(this.suggestion.id, SuggestionState.CHECKED)
         }
+        return Promise.resolve(new ExecutionResult("",""))
       case SuggestionType.URL:
         if (this.suggestion.url) {
           NavigationService.openOrCreateTab([this.suggestion.url])
           // an url suggestion should not appear again
           useSuggestionsStore().updateSuggestionState(this.suggestion.id, SuggestionState.CHECKED)
         }
+        return Promise.resolve(new ExecutionResult("",""))
       default:
         return Promise.reject("unknown suggestion type: " + this.suggestion.type)
     }
