@@ -1,30 +1,29 @@
-import {IDBPDatabase, openDB} from "idb";
-import _ from "lodash";
-import {Suggestion, SuggestionState, SuggestionType} from "src/suggestions/models/Suggestion";
+import { IDBPDatabase, openDB } from 'idb'
+import _ from 'lodash'
+import { Suggestion, SuggestionState, SuggestionType } from 'src/suggestions/models/Suggestion'
 
 class IndexedDbSuggestionsPersistence {
-
-  STORE_IDENT = "suggestions"
+  STORE_IDENT = 'suggestions'
 
   private db: IDBPDatabase = null as unknown as IDBPDatabase
 
   async init() {
     this.db = await this.initDatabase()
-    console.debug(` ...initialized suggestions: DB`,'✅')
-    return Promise.resolve("")
+    console.debug(` ...initialized suggestions: DB`, '✅')
+    return Promise.resolve('')
   }
 
   private async initDatabase(): Promise<IDBPDatabase> {
     const ctx = this
-    return await openDB("suggestionsDB", 1, {
+    return await openDB('suggestionsDB', 1, {
       // upgrading see https://stackoverflow.com/questions/50193906/create-index-on-already-existing-objectstore
       upgrade(db) {
         if (!db.objectStoreNames.contains(ctx.STORE_IDENT)) {
-          console.log("creating db", ctx.STORE_IDENT)
-          db.createObjectStore(ctx.STORE_IDENT);
+          console.log('creating db', ctx.STORE_IDENT)
+          db.createObjectStore(ctx.STORE_IDENT)
         }
-      }
-    });
+      },
+    })
   }
 
   async getSuggestions(): Promise<Suggestion[]> {
@@ -34,26 +33,34 @@ class IndexedDbSuggestionsPersistence {
   async addSuggestion(suggestion: Suggestion): Promise<void> {
     const suggestions = await this.getSuggestions()
     // console.log("%csuggestions from db", "color:red", suggestions)
-    const foundAsNewDelayedOrIgnored = _.find(suggestions,
+    const foundAsNewDelayedOrIgnored = _.find(
+      suggestions,
       (s: Suggestion) =>
         s.state === SuggestionState.NEW ||
         s.state === SuggestionState.IGNORED ||
-        s.state === SuggestionState.DECISION_DELAYED)
-    if (foundAsNewDelayedOrIgnored) { // && suggestion.state === SuggestionState.NEW) {
-      if (foundAsNewDelayedOrIgnored.state === SuggestionState.IGNORED && suggestion.type === SuggestionType.RESTART) {
-        console.log("setting existing restart suggestion to state NEW again")
+        s.state === SuggestionState.DECISION_DELAYED,
+    )
+    if (foundAsNewDelayedOrIgnored) {
+      // && suggestion.state === SuggestionState.NEW) {
+      if (
+        foundAsNewDelayedOrIgnored.state === SuggestionState.IGNORED &&
+        suggestion.type === SuggestionType.RESTART
+      ) {
+        console.log('setting existing restart suggestion to state NEW again')
         foundAsNewDelayedOrIgnored.state = SuggestionState.NEW
         this.db.put('suggestions', foundAsNewDelayedOrIgnored, foundAsNewDelayedOrIgnored.id)
         return Promise.resolve()
       }
-      return Promise.reject(`there's already a suggestion in state ${foundAsNewDelayedOrIgnored.state}, not adding (now)`)
+      return Promise.reject(
+        `there's already a suggestion in state ${foundAsNewDelayedOrIgnored.state}, not adding (now)`,
+      )
     }
     const found = _.find(suggestions, (s: Suggestion) => s.url === suggestion.url)
     if (!found) {
       await this.db.add('suggestions', suggestion, suggestion.id)
       return Promise.resolve()
     }
-    return Promise.reject("suggestion already exists")
+    return Promise.reject('suggestion already exists')
   }
 
   removeSuggestion(ident: string): Promise<any> {
@@ -61,17 +68,15 @@ class IndexedDbSuggestionsPersistence {
   }
 
   async setSuggestionState(suggestionId: string, state: SuggestionState): Promise<Suggestion> {
-    console.log("setting suggestion to state", suggestionId, state)
+    console.log('setting suggestion to state', suggestionId, state)
     const s: Suggestion = await this.db.get('suggestions', suggestionId)
     if (s) {
       s.state = state
       await this.db.put('suggestions', s, suggestionId)
       return Promise.resolve(s)
     }
-    return Promise.reject("could not update suggestion")
+    return Promise.reject('could not update suggestion')
   }
-
-
 }
 
 export default new IndexedDbSuggestionsPersistence()

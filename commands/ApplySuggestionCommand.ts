@@ -1,13 +1,11 @@
-import Command from "src/core/domain/Command";
-import {ExecutionResult} from "src/core/domain/ExecutionResult";
-import {Suggestion, SuggestionState, SuggestionType} from "src/suggestions/models/Suggestion";
-import {useSuggestionsStore} from "src/suggestions/stores/suggestionsStore";
-import NavigationService from "src/services/NavigationService";
+import Command from 'src/core/domain/Command'
+import { ExecutionResult } from 'src/core/domain/ExecutionResult'
+import { Suggestion, SuggestionState, SuggestionType } from 'src/suggestions/models/Suggestion'
+import { useSuggestionsStore } from 'src/suggestions/stores/suggestionsStore'
+import NavigationService from 'src/services/NavigationService'
 
 export class ApplySuggestionCommand implements Command<any> {
-
-  constructor(public suggestion: Suggestion) {
-  }
+  constructor(public suggestion: Suggestion) {}
 
   async execute(): Promise<ExecutionResult<any>> {
     switch (this.suggestion.type) {
@@ -47,22 +45,20 @@ export class ApplySuggestionCommand implements Command<any> {
           // a feature suggestion should not appear again
           useSuggestionsStore().updateSuggestionState(this.suggestion.id, SuggestionState.CHECKED)
         }
-        return Promise.resolve(new ExecutionResult("",""))
+        return Promise.resolve(new ExecutionResult('', ''))
       case SuggestionType.URL:
         if (this.suggestion.url) {
           NavigationService.openOrCreateTab([this.suggestion.url])
           // an url suggestion should not appear again
           useSuggestionsStore().updateSuggestionState(this.suggestion.id, SuggestionState.CHECKED)
         }
-        return Promise.resolve(new ExecutionResult("",""))
+        return Promise.resolve(new ExecutionResult('', ''))
       default:
-        return Promise.reject("unknown suggestion type: " + this.suggestion.type)
+        return Promise.reject('unknown suggestion type: ' + this.suggestion.type)
     }
   }
-
-
 }
 
 ApplySuggestionCommand.prototype.toString = function cmdToString() {
-  return `ApplySuggestionCommand: {suggestion=${this.suggestion.toString()}}`;
-};
+  return `ApplySuggestionCommand: {suggestion=${this.suggestion.toString()}}`
+}

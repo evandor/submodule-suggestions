@@ -19,47 +19,51 @@
           </q-btn>
         </template>
         <template v-else>
-
-        <q-btn label="Ignore" size="sm" color="negative" v-close-popup @click="ignoreSuggestion()">
-          <q-tooltip class="tooltip-small" :delay="500">This suggestion will not show up again</q-tooltip>
-        </q-btn>
-        <q-btn label="Check" size="sm" color="warning" v-close-popup @click="addSuggestion">
-          <q-tooltip class="tooltip-small" :delay="500">Get Details about this suggestion and decide what to do
-          </q-tooltip>
-        </q-btn>
+          <q-btn
+            label="Ignore"
+            size="sm"
+            color="negative"
+            v-close-popup
+            @click="ignoreSuggestion()"
+          >
+            <q-tooltip class="tooltip-small" :delay="500"
+              >This suggestion will not show up again</q-tooltip
+            >
+          </q-btn>
+          <q-btn label="Check" size="sm" color="warning" v-close-popup @click="addSuggestion">
+            <q-tooltip class="tooltip-small" :delay="500"
+              >Get Details about this suggestion and decide what to do
+            </q-tooltip>
+          </q-btn>
         </template>
       </q-card-actions>
-
-
     </q-card>
   </q-dialog>
-
 </template>
 
 <script lang="ts" setup>
+import { PropType } from 'vue'
+import { openURL, useDialogPluginComponent } from 'quasar'
+import { useRouter } from 'vue-router'
+import { useSuggestionsStore } from 'src/suggestions/stores/suggestionsStore'
+import { Suggestion, SuggestionState, SuggestionType } from 'src/suggestions/models/Suggestion'
+import NavigationService from 'src/services/NavigationService'
 
-import {PropType} from "vue";
-import {openURL, useDialogPluginComponent} from "quasar";
-import {useRouter} from "vue-router";
-import {useSuggestionsStore} from "src/suggestions/stores/suggestionsStore";
-import {Suggestion, SuggestionState, SuggestionType} from "src/suggestions/models/Suggestion";
-import NavigationService from "src/services/NavigationService";
-
-defineEmits([
-  ...useDialogPluginComponent.emits
-])
+defineEmits([...useDialogPluginComponent.emits])
 
 const props = defineProps({
-  suggestion: {type: Object as PropType<Suggestion>, required: true},
-  fromPanel: {type: Boolean, default: false}
+  suggestion: { type: Object as PropType<Suggestion>, required: true },
+  fromPanel: { type: Boolean, default: false },
 })
 
-const {dialogRef, onDialogHide, onDialogCancel} = useDialogPluginComponent()
+const { dialogRef, onDialogHide, onDialogCancel } = useDialogPluginComponent()
 
 const router = useRouter()
 
-const delayDecision = () => useSuggestionsStore().updateSuggestionState(props.suggestion.id, SuggestionState.DECISION_DELAYED)
-const ignoreSuggestion = () => useSuggestionsStore().updateSuggestionState(props.suggestion.id, SuggestionState.IGNORED)
+const delayDecision = () =>
+  useSuggestionsStore().updateSuggestionState(props.suggestion.id, SuggestionState.DECISION_DELAYED)
+const ignoreSuggestion = () =>
+  useSuggestionsStore().updateSuggestionState(props.suggestion.id, SuggestionState.IGNORED)
 
 const addSuggestion = () => {
   const res = props.suggestion
@@ -67,34 +71,32 @@ const addSuggestion = () => {
     switch (res.type) {
       case SuggestionType.FEATURE:
         NavigationService.openOrCreateTab(
-          [chrome.runtime.getURL("/www/index.html#" + props.suggestion.url)],
+          [chrome.runtime.getURL('/www/index.html#' + props.suggestion.url)],
           undefined,
           [],
-          true)
+          true,
+        )
         useSuggestionsStore().updateSuggestionState(res.id, SuggestionState.CHECKED)
-        break;
+        break
       case SuggestionType.URL:
         if (props.suggestion.url) {
-          NavigationService.openOrCreateTab(
-            [props.suggestion?.url],
-            undefined,
-            [],
-            true)
+          NavigationService.openOrCreateTab([props.suggestion?.url], undefined, [], true)
           useSuggestionsStore().removeSuggestion(res.id)
         }
-        break;
+        break
       default:
         NavigationService.openOrCreateTab(
-          [chrome.runtime.getURL("/www/index.html#/mainpanel/suggestions/" + props.suggestion.id)],
+          [chrome.runtime.getURL('/www/index.html#/mainpanel/suggestions/' + props.suggestion.id)],
           undefined,
           [],
-          true)
+          true,
+        )
     }
   } else {
-    if (res.url.startsWith("/")) {
+    if (res.url.startsWith('/')) {
       router.push(res.url)
     } else {
-      openURL((res.url))
+      openURL(res.url)
     }
   }
 }
@@ -103,5 +105,4 @@ const restart = () => {
   useSuggestionsStore().removeSuggestion(props.suggestion.id)
   //AppService.restart("restarted=true")
 }
-
 </script>
