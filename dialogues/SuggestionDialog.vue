@@ -42,12 +42,12 @@
 </template>
 
 <script lang="ts" setup>
-import { PropType } from 'vue'
 import { openURL, useDialogPluginComponent } from 'quasar'
-import { useRouter } from 'vue-router'
-import { useSuggestionsStore } from 'src/suggestions/stores/suggestionsStore'
-import { Suggestion, SuggestionState, SuggestionType } from 'src/suggestions/models/Suggestion'
 import NavigationService from 'src/services/NavigationService'
+import { Suggestion, SuggestionState, SuggestionType } from 'src/suggestions/models/Suggestion'
+import { useSuggestionsStore } from 'src/suggestions/stores/suggestionsStore'
+import { PropType } from 'vue'
+import { useRouter } from 'vue-router'
 
 defineEmits([...useDialogPluginComponent.emits])
 

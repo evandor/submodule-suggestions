@@ -1,8 +1,8 @@
-import { defineStore } from 'pinia'
-import { computed, ref } from 'vue'
-import { Suggestion, SuggestionState } from 'src/suggestions/models/Suggestion'
 import _ from 'lodash'
+import { defineStore } from 'pinia'
+import { Suggestion, SuggestionState } from 'src/suggestions/models/Suggestion'
 import IndexedDbSuggestionsPersistence from 'src/suggestions/persistence/IndexedDbSuggestionsPersistence'
+import { computed, ref } from 'vue'
 
 let storage = IndexedDbSuggestionsPersistence
 

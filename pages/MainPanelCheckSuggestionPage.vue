@@ -188,24 +188,23 @@
 </template>
 
 <script lang="ts" setup>
-import { onMounted, ref, watchEffect } from 'vue'
-import Analytics from 'src/core/utils/google-analytics'
-import { useRoute } from 'vue-router'
-import { date } from 'quasar'
-import { useCommandExecutor } from 'src/core/services/CommandExecutor'
-import { Suggestion, SuggestionState, SuggestionType } from 'src/suggestions/models/Suggestion'
-import { useSuggestionsStore } from 'src/suggestions/stores/suggestionsStore'
-import { ApplySuggestionCommand } from 'src/suggestions/commands/ApplySuggestionCommand'
-import { IgnoreSuggestionCommand } from 'src/suggestions/commands/IgnoreSuggestionCommand'
-import NavigationService from 'src/services/NavigationService'
 // import PdfService from "src/snapshots/services/PdfService";
 // import ContentUtils from "src/core/utils/ContentUtils";
 // import {SavedBlob} from "src/models/SavedBlob";
 // import pixelmatch from "pixelmatch";
 import { PNG } from 'pngjs/browser'
-
+import { date } from 'quasar'
+import { useCommandExecutor } from 'src/core/services/CommandExecutor'
 // import {PNGWithMetadata} from "pngjs";
 import { NotificationType } from 'src/core/services/ErrorHandler'
+import Analytics from 'src/core/utils/google-analytics'
+import NavigationService from 'src/services/NavigationService'
+import { ApplySuggestionCommand } from 'src/suggestions/commands/ApplySuggestionCommand'
+import { IgnoreSuggestionCommand } from 'src/suggestions/commands/IgnoreSuggestionCommand'
+import { Suggestion, SuggestionState, SuggestionType } from 'src/suggestions/models/Suggestion'
+import { useSuggestionsStore } from 'src/suggestions/stores/suggestionsStore'
+import { onMounted, ref, watchEffect } from 'vue'
+import { useRoute } from 'vue-router'
 
 const route = useRoute()
 

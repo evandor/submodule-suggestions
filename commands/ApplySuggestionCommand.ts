@@ -1,8 +1,8 @@
 import Command from 'src/core/domain/Command'
 import { ExecutionResult } from 'src/core/domain/ExecutionResult'
+import NavigationService from 'src/services/NavigationService'
 import { Suggestion, SuggestionState, SuggestionType } from 'src/suggestions/models/Suggestion'
 import { useSuggestionsStore } from 'src/suggestions/stores/suggestionsStore'
-import NavigationService from 'src/services/NavigationService'
 
 export class ApplySuggestionCommand implements Command<any> {
   constructor(public suggestion: Suggestion) {}

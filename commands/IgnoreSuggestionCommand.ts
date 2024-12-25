@@ -1,8 +1,8 @@
 import Command from 'src/core/domain/Command'
 import { ExecutionResult } from 'src/core/domain/ExecutionResult'
+import { useUtils } from 'src/core/services/Utils'
 import { Suggestion, SuggestionState } from 'src/suggestions/models/Suggestion'
 import { useSuggestionsStore } from 'src/suggestions/stores/suggestionsStore'
-import { useUtils } from 'src/core/services/Utils'
 
 const { sendMsg } = useUtils()
 
