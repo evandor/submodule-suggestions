@@ -2,11 +2,7 @@
   <!-- toolbar -->
   <q-toolbar class="text-primary">
     <q-toolbar-title>
-      {{
-        suggestion?.state === SuggestionState.NOTIFICATION || suggestion?.url
-          ? 'Notification'
-          : 'Suggestion'
-      }}
+      {{ suggestion?.state === SuggestionState.NOTIFICATION || suggestion?.url ? 'Notification' : 'Suggestion' }}
     </q-toolbar-title>
   </q-toolbar>
 
@@ -58,8 +54,7 @@
       v-if="
         suggestion?.type?.toUpperCase() === 'REDIRECT_HAPPENED_FOR_BOOKMARK' ||
         suggestion?.type?.toUpperCase() === 'REDIRECT_HAPPENED_FOR_TAB'
-      "
-    >
+      ">
       <div class="row items-baseline q-ma-md">
         <div class="col-2">Got Response Code</div>
         <div class="col">
@@ -83,12 +78,7 @@
             <q-btn label="Ignore" class="q-mr-md" size="sm" @click="ignoreSuggestion()">
               <q-tooltip class="tooltip-small" :delay="500">Ignore this suggestion</q-tooltip>
             </q-btn>
-            <q-btn
-              label="Apply Suggestion"
-              size="sm"
-              color="warning"
-              @click="applySuggestion"
-            ></q-btn>
+            <q-btn label="Apply Suggestion" size="sm" color="warning" @click="applySuggestion"></q-btn>
           </template>
           <template v-else>
             <q-btn label="Close Window" class="q-mr-md" size="sm" @click="closeWindow()" />

@@ -19,16 +19,8 @@
           </q-btn>
         </template>
         <template v-else>
-          <q-btn
-            label="Ignore"
-            size="sm"
-            color="negative"
-            v-close-popup
-            @click="ignoreSuggestion()"
-          >
-            <q-tooltip class="tooltip-small" :delay="500"
-              >This suggestion will not show up again</q-tooltip
-            >
+          <q-btn label="Ignore" size="sm" color="negative" v-close-popup @click="ignoreSuggestion()">
+            <q-tooltip class="tooltip-small" :delay="500">This suggestion will not show up again</q-tooltip>
           </q-btn>
           <q-btn label="Check" size="sm" color="warning" v-close-popup @click="addSuggestion">
             <q-tooltip class="tooltip-small" :delay="500"
@@ -62,8 +54,7 @@ const router = useRouter()
 
 const delayDecision = () =>
   useSuggestionsStore().updateSuggestionState(props.suggestion.id, SuggestionState.DECISION_DELAYED)
-const ignoreSuggestion = () =>
-  useSuggestionsStore().updateSuggestionState(props.suggestion.id, SuggestionState.IGNORED)
+const ignoreSuggestion = () => useSuggestionsStore().updateSuggestionState(props.suggestion.id, SuggestionState.IGNORED)
 
 const addSuggestion = () => {
   const res = props.suggestion

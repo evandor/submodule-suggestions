@@ -42,10 +42,7 @@ class IndexedDbSuggestionsPersistence {
     )
     if (foundAsNewDelayedOrIgnored) {
       // && suggestion.state === SuggestionState.NEW) {
-      if (
-        foundAsNewDelayedOrIgnored.state === SuggestionState.IGNORED &&
-        suggestion.type === SuggestionType.RESTART
-      ) {
+      if (foundAsNewDelayedOrIgnored.state === SuggestionState.IGNORED && suggestion.type === SuggestionType.RESTART) {
         console.log('setting existing restart suggestion to state NEW again')
         foundAsNewDelayedOrIgnored.state = SuggestionState.NEW
         this.db.put('suggestions', foundAsNewDelayedOrIgnored, foundAsNewDelayedOrIgnored.id)
