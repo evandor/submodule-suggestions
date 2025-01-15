@@ -9,7 +9,7 @@ class IndexedDbSuggestionsPersistence {
 
   async init() {
     this.db = await this.initDatabase()
-    console.debug(` ...initialized suggestions: DB`, '✅')
+    // console.debug(` ...initialized suggestions: DB`, '✅')
     return Promise.resolve('')
   }
 

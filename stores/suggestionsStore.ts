@@ -12,7 +12,7 @@ export const useSuggestionsStore = defineStore('suggestions', () => {
   async function init() {
     await storage.init()
     loadSuggestionsFromDb()
-    console.debug(' ...initialized suggestions: Store', '✅')
+    // console.debug(' ...initialized suggestions: Store', '✅')
     // await setup("initialization")
   }
 
