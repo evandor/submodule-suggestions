@@ -1,8 +1,9 @@
 import { IDBPDatabase, openDB } from 'idb'
 import _ from 'lodash'
-import { Suggestion, SuggestionState, SuggestionType } from 'src/suggestions/models/Suggestion'
+import { Suggestion, SuggestionState } from 'src/suggestions/models/Suggestion'
+import SuggestionsPersistence from 'src/suggestions/persistence/SuggestionsPersistence'
 
-class IndexedDbSuggestionsPersistence {
+class IndexedDbSuggestionsPersistence extends SuggestionsPersistence {
   STORE_IDENT = 'suggestions'
 
   private db: IDBPDatabase = null as unknown as IDBPDatabase
@@ -27,7 +28,7 @@ class IndexedDbSuggestionsPersistence {
   }
 
   async getSuggestions(): Promise<Suggestion[]> {
-    return this.db ? this.db.getAll('suggestions') : Promise.resolve([])
+    return this.db ? this.db.getAll(this.STORE_IDENT) : Promise.resolve([])
   }
 
   async addSuggestion(suggestion: Suggestion): Promise<void> {
@@ -35,17 +36,14 @@ class IndexedDbSuggestionsPersistence {
     // console.log("%csuggestions from db", "color:red", suggestions)
     const foundAsNewDelayedOrIgnored = _.find(
       suggestions,
-      (s: Suggestion) =>
-        s.state === SuggestionState.NEW ||
-        s.state === SuggestionState.IGNORED ||
-        s.state === SuggestionState.DECISION_DELAYED,
+      (s: Suggestion) => s.state === 'NEW' || s.state === 'IGNORED' || s.state === 'DECISION_DELAYED',
     )
     if (foundAsNewDelayedOrIgnored) {
       // && suggestion.state === SuggestionState.NEW) {
-      if (foundAsNewDelayedOrIgnored.state === SuggestionState.IGNORED && suggestion.type === SuggestionType.RESTART) {
+      if (foundAsNewDelayedOrIgnored.state === 'IGNORED' && suggestion.type === 'RESTART') {
         console.log('setting existing restart suggestion to state NEW again')
-        foundAsNewDelayedOrIgnored.state = SuggestionState.NEW
-        this.db.put('suggestions', foundAsNewDelayedOrIgnored, foundAsNewDelayedOrIgnored.id)
+        foundAsNewDelayedOrIgnored.state = 'NEW'
+        this.db.put(this.STORE_IDENT, foundAsNewDelayedOrIgnored, foundAsNewDelayedOrIgnored.id)
         return Promise.resolve()
       }
       return Promise.reject(
@@ -54,25 +52,29 @@ class IndexedDbSuggestionsPersistence {
     }
     const found = _.find(suggestions, (s: Suggestion) => s.url === suggestion.url)
     if (!found) {
-      await this.db.add('suggestions', suggestion, suggestion.id)
+      await this.db.add(this.STORE_IDENT, suggestion, suggestion.id)
       return Promise.resolve()
     }
     return Promise.reject('suggestion already exists')
   }
 
   removeSuggestion(ident: string): Promise<any> {
-    return this.db.delete('suggestions', ident)
+    return this.db.delete(this.STORE_IDENT, ident)
   }
 
   async setSuggestionState(suggestionId: string, state: SuggestionState): Promise<Suggestion> {
     console.log('setting suggestion to state', suggestionId, state)
-    const s: Suggestion = await this.db.get('suggestions', suggestionId)
+    const s: Suggestion = await this.db.get(this.STORE_IDENT, suggestionId)
     if (s) {
       s.state = state
-      await this.db.put('suggestions', s, suggestionId)
+      await this.db.put(this.STORE_IDENT, s, suggestionId)
       return Promise.resolve(s)
     }
     return Promise.reject('could not update suggestion')
+  }
+
+  async clearAll(): Promise<void> {
+    return await this.db.clear(this.STORE_IDENT)
   }
 }
 

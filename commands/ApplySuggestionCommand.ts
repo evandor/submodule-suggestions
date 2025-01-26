@@ -1,7 +1,7 @@
 import Command from 'src/core/domain/Command'
 import { ExecutionResult } from 'src/core/domain/ExecutionResult'
 import NavigationService from 'src/services/NavigationService'
-import { Suggestion, SuggestionState, SuggestionType } from 'src/suggestions/models/Suggestion'
+import { Suggestion } from 'src/suggestions/models/Suggestion'
 import { useSuggestionsStore } from 'src/suggestions/stores/suggestionsStore'
 
 export class ApplySuggestionCommand implements Command<any> {
@@ -39,18 +39,18 @@ export class ApplySuggestionCommand implements Command<any> {
       //       return Promise.resolve(new ExecutionResult("", "The suggestion has been applied"))
       //     })
       //     .catch((err) => Promise.reject("Problem applying suggestion: " + err))
-      case SuggestionType.FEATURE:
+      case 'FEATURE':
         if (this.suggestion.url) {
           NavigationService.openOrCreateTab([this.suggestion.url])
           // a feature suggestion should not appear again
-          useSuggestionsStore().updateSuggestionState(this.suggestion.id, SuggestionState.CHECKED)
+          useSuggestionsStore().updateSuggestionState(this.suggestion.id, 'CHECKED')
         }
         return Promise.resolve(new ExecutionResult('', ''))
-      case SuggestionType.URL:
+      case 'URL':
         if (this.suggestion.url) {
           NavigationService.openOrCreateTab([this.suggestion.url])
           // an url suggestion should not appear again
-          useSuggestionsStore().updateSuggestionState(this.suggestion.id, SuggestionState.CHECKED)
+          useSuggestionsStore().updateSuggestionState(this.suggestion.id, 'CHECKED')
         }
         return Promise.resolve(new ExecutionResult('', ''))
       default:
@@ -60,5 +60,5 @@ export class ApplySuggestionCommand implements Command<any> {
 }
 
 ApplySuggestionCommand.prototype.toString = function cmdToString() {
-  return `ApplySuggestionCommand: {suggestion=${this.suggestion.toString()}}`
+  return `ApplySuggestionCommand: {suggestion=${JSON.stringify(this.suggestion)}}`
 }

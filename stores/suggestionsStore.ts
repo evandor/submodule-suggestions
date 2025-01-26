@@ -1,26 +1,24 @@
 import _ from 'lodash'
 import { defineStore } from 'pinia'
 import { Suggestion, SuggestionState } from 'src/suggestions/models/Suggestion'
-import IndexedDbSuggestionsPersistence from 'src/suggestions/persistence/IndexedDbSuggestionsPersistence'
+import SuggestionsPersistence from 'src/suggestions/persistence/SuggestionsPersistence'
 import { computed, ref } from 'vue'
-
-let storage = IndexedDbSuggestionsPersistence
 
 export const useSuggestionsStore = defineStore('suggestions', () => {
   const suggestions = ref<Suggestion[]>([])
 
-  async function init() {
+  let storage: SuggestionsPersistence = null as unknown as SuggestionsPersistence
+
+  async function init(db: SuggestionsPersistence) {
+    storage = db
     await storage.init()
-    loadSuggestionsFromDb()
-    // console.debug(' ...initialized suggestions: Store', '✅')
-    // await setup("initialization")
+    await loadSuggestionsFromDb()
   }
 
-  function loadSuggestionsFromDb() {
+  async function loadSuggestionsFromDb() {
+    console.log('loading suggestions')
     if (storage) {
-      storage.getSuggestions().then((res: Suggestion[]) => {
-        suggestions.value = res
-      })
+      suggestions.value = await storage.getSuggestions()
     }
   }
 
@@ -42,7 +40,7 @@ export const useSuggestionsStore = defineStore('suggestions', () => {
 
   function inactivateSuggestion(s: Suggestion | undefined) {
     if (s) {
-      s.state = SuggestionState.INACTIVE
+      s.state = 'INACTIVE'
       console.log('about to inactivate suggestion', s)
       storage
         .addSuggestion(s)
@@ -63,28 +61,31 @@ export const useSuggestionsStore = defineStore('suggestions', () => {
     })
   }
 
-  function updateSuggestionState(id: string, state: SuggestionState) {
+  async function updateSuggestionState(id: string, state: SuggestionState) {
     return storage.setSuggestionState(id, state).then((res: any) => loadSuggestionsFromDb())
   }
 
   function applySuggestion(id: string): Promise<Suggestion> {
     console.log('%capplied suggestion', 'background-color:grey', id)
-    return storage.setSuggestionState(id, SuggestionState.APPLIED).then((res: any) => {
+    return storage.setSuggestionState(id, 'APPLIED').then((res: any) => {
       loadSuggestionsFromDb()
       return res
     })
   }
 
   const getSuggestions = computed(() => {
-    return (states: SuggestionState[]) =>
-      _.filter(suggestions.value, (s: Suggestion) => {
+    return (states: SuggestionState[]) => {
+      // console.log('checking for states', states)
+      return _.filter(suggestions.value, (s: Suggestion) => {
         for (const state of states) {
           if (state === s.state) {
+            // console.log(' - ', s.state)
             return true
           }
         }
         return false
       })
+    }
   })
 
   const getSuggestion = computed(() => {
@@ -94,6 +95,10 @@ export const useSuggestionsStore = defineStore('suggestions', () => {
   const getSuggestionForUrl = computed(() => {
     return (url: string) => _.find(suggestions.value, (s: any) => s.id === btoa(url))
   })
+
+  const clearAll = () => {
+    storage.clearAll()
+  }
 
   return {
     init,
@@ -106,5 +111,6 @@ export const useSuggestionsStore = defineStore('suggestions', () => {
     applySuggestion,
     inactivateSuggestion,
     getSuggestionForUrl,
+    clearAll,
   }
 })

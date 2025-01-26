@@ -2,7 +2,7 @@
   <!-- toolbar -->
   <q-toolbar class="text-primary">
     <q-toolbar-title>
-      {{ suggestion?.state === SuggestionState.NOTIFICATION || suggestion?.url ? 'Notification' : 'Suggestion' }}
+      {{ suggestion?.state === 'NOTIFICATION' || suggestion?.url ? 'Notification' : 'Suggestion' }}
     </q-toolbar-title>
   </q-toolbar>
 
@@ -191,7 +191,7 @@ import Analytics from 'src/core/utils/google-analytics'
 import NavigationService from 'src/services/NavigationService'
 import { ApplySuggestionCommand } from 'src/suggestions/commands/ApplySuggestionCommand'
 import { IgnoreSuggestionCommand } from 'src/suggestions/commands/IgnoreSuggestionCommand'
-import { Suggestion, SuggestionState, SuggestionType } from 'src/suggestions/models/Suggestion'
+import { Suggestion } from 'src/suggestions/models/Suggestion'
 import { useSuggestionsStore } from 'src/suggestions/stores/suggestionsStore'
 import { onMounted, ref, watchEffect } from 'vue'
 import { useRoute } from 'vue-router'
@@ -219,7 +219,7 @@ watchEffect(async () => {
   if (suggestionId.value) {
     suggestion.value = useSuggestionsStore().getSuggestion(suggestionId.value) as Suggestion
     console.log('got suggestion', suggestion.value)
-    if (suggestion.value && suggestion.value.type === SuggestionType.CONTENT_CHANGE) {
+    if (suggestion.value && suggestion.value.type === 'CONTENT_CHANGE') {
       const tabId = suggestion.value['data' as keyof object]['tabId' as keyof object]
       console.log('got tabId', tabId)
       // pngs.value = await PdfService.getPngsForTab(tabId)

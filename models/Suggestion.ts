@@ -1,33 +1,33 @@
 import _ from 'lodash'
 
-export enum SuggestionState {
-  NEW = 'NEW',
-  IGNORED = 'IGNORED',
-  APPLIED = 'APPLIED',
-  CHECKED = 'CHECKED', // we do not know if the suggestion was applied or ignored
-  DECISION_DELAYED = 'DECISION_DELAYED',
-  INACTIVE = 'INACTIVE',
-  NOTIFICATION = 'NOTIFICATION', // this has been sent as chrome notification
-}
+export type SuggestionState =
+  | 'NEW'
+  | 'IGNORED'
+  | 'APPLIED'
+  | 'CHECKED'
+  | 'DECISION_DELAYED'
+  | 'INACTIVE'
+  | 'NOTIFICATION'
 
-export enum SuggestionType {
-  RSS = 'RSS',
-  REDIRECT_HAPPENED_FOR_TAB = 'REDIRECT_HAPPENED_FOR_TAB',
-  REDIRECT_HAPPENED_FOR_BOOKMARK = 'REDIRECT_HAPPENED_FOR_BOOKMARK',
-  CONTENT_CHANGE = 'CONTENT_CHANGE',
-  FEATURE = 'FEATURE',
-  URL = 'URL',
-  RESTART = 'RESTART',
-}
+export type SuggestionType =
+  | 'RSS'
+  | 'REDIRECT_HAPPENED_FOR_TAB'
+  | 'REDIRECT_HAPPENED_FOR_BOOKMARK'
+  | 'CONTENT_CHANGE'
+  | 'FEATURE'
+  | 'URL'
+  | 'RESTART'
+  | 'TABSET_SHARED'
+  | 'USE_EXTENSION'
 
-export enum StaticSuggestionIdent {
-  TRY_TAB_DETAILS_FEATURE = 'TRY_TAB_DETAILS_FEATURE',
-  TRY_BOOKMARKS_FEATURE = 'TRY_BOOKMARKS_FEATURE',
-  TRY_SPACES_FEATURE = 'TRY_SPACES_FEATURE',
-  TRY_NEWEST_TABS_FEATURE = 'TRY_NEWEST_TABS_FEATURE',
-  RELEASE_NOTES_AVAILABLE = 'RELEASE_NOTES_AVAILABLE',
-  RESTART_SUGGESTED = 'RESTART_SUGGESTED',
-}
+export type StaticSuggestionIdent =
+  | 'TRY_TAB_DETAILS_FEATURE'
+  | 'TRY_BOOKMARKS_FEATURE'
+  | 'TRY_SPACES_FEATURE'
+  | 'TRY_NEWEST_TABS_FEATURE'
+  | 'RELEASE_NOTES_AVAILABLE'
+  | 'RESTART_SUGGESTED'
+  | 'USE_EXTENSION_SUGGESTION'
 
 export class Suggestion {
   public state: SuggestionState
@@ -37,25 +37,25 @@ export class Suggestion {
 
   static staticSuggestions: Suggestion[] = [
     new Suggestion(
-      StaticSuggestionIdent.TRY_BOOKMARKS_FEATURE,
+      'TRY_BOOKMARKS_FEATURE',
       'Want to try a new feature?',
       "Maybe you want to try the optional 'Bookmarks' feature?",
       '/features/bookmarks',
-      SuggestionType.FEATURE,
+      'FEATURE',
     ).setImage('o_bookmarks'),
     new Suggestion(
-      StaticSuggestionIdent.TRY_SPACES_FEATURE,
+      'TRY_SPACES_FEATURE',
       'Want to try a new feature?',
       "Check out the optional 'Spaces' feature and get another level of organization",
       '/features/spaces',
-      SuggestionType.FEATURE,
+      'FEATURE',
     ).setImage('o_space_dashboard'),
     new Suggestion(
-      StaticSuggestionIdent.TRY_NEWEST_TABS_FEATURE,
+      'TRY_NEWEST_TABS_FEATURE',
       'Want to try a new feature?',
       'Activate a view with your latest tabs',
       '/features/newest_tabs',
-      SuggestionType.FEATURE,
+      'FEATURE',
     ).setImage('o_schedule'),
     // new Suggestion(StaticSuggestionIdent.RELEASE_NOTES_AVAILABLE,
     //   "Version was updated",
@@ -64,12 +64,19 @@ export class Suggestion {
     //   SuggestionType.URL)
     //   .setImage('o_schedule'),
     new Suggestion(
-      StaticSuggestionIdent.RESTART_SUGGESTED,
+      'RESTART_SUGGESTED',
       'Restart Required',
       'Please restart tabsets by clicking the button',
       '',
-      SuggestionType.RESTART,
+      'RESTART',
     ).setImage('o_schedule'),
+    new Suggestion(
+      'USE_EXTENSION_SUGGESTION',
+      'Check out Tabsets Extension',
+      'Tabsets Browser Extension will provide many more features and integrations',
+      'https://docs.tabsets.net',
+      'URL',
+    ).setImage('o_extension'),
   ]
 
   constructor(
@@ -77,9 +84,9 @@ export class Suggestion {
     public title: string,
     public msg: string,
     public url: string,
-    public type: SuggestionType = SuggestionType.RSS,
+    public type: SuggestionType = 'RSS',
   ) {
-    this.state = SuggestionState.NEW
+    this.state = 'NEW'
     this.created = new Date().getTime()
   }
 
@@ -94,7 +101,6 @@ export class Suggestion {
   }
 
   static getStaticSuggestion(ident: StaticSuggestionIdent): Suggestion | undefined {
-    //console.log("hier", this.staticSuggestions, ident)
     return _.find(this.staticSuggestions, (s: any) => s.id === ident)
   }
 }

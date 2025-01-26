@@ -1,7 +1,7 @@
 import Command from 'src/core/domain/Command'
 import { ExecutionResult } from 'src/core/domain/ExecutionResult'
 import { useUtils } from 'src/core/services/Utils'
-import { Suggestion, SuggestionState } from 'src/suggestions/models/Suggestion'
+import { Suggestion } from 'src/suggestions/models/Suggestion'
 import { useSuggestionsStore } from 'src/suggestions/stores/suggestionsStore'
 
 const { sendMsg } = useUtils()
@@ -11,7 +11,7 @@ export class IgnoreSuggestionCommand implements Command<any> {
 
   async execute(): Promise<ExecutionResult<any>> {
     return useSuggestionsStore()
-      .updateSuggestionState(this.suggestion.id, SuggestionState.IGNORED)
+      .updateSuggestionState(this.suggestion.id, 'IGNORED')
       .then(() => {
         sendMsg('reload-suggestions', {})
       })
@@ -25,5 +25,5 @@ export class IgnoreSuggestionCommand implements Command<any> {
 }
 
 IgnoreSuggestionCommand.prototype.toString = function cmdToString() {
-  return `IgnoreSuggestionCommand: {suggestion=${this.suggestion.toString()}}`
+  return `IgnoreSuggestionCommand: {suggestion=${JSON.stringify(this.suggestion)}}`
 }
