@@ -87,7 +87,7 @@
       </div>
     </template>
 
-    <!--    <template v-if="suggestion?.type === SuggestionType.CONTENT_CHANGE">-->
+    <!--    <template v-if="suggestion?.type === 'CONTENT_CHANGE'">-->
 
     <!--      <div class="row items-baseline q-ma-md">-->
     <!--        <div class="col-2 text-bold">-->
