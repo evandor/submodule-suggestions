@@ -1,5 +1,5 @@
 import Persistence from 'src/core/persistence/Persistence'
-import { Suggestion, SuggestionState } from 'src/suggestions/models/Suggestion'
+import { Suggestion, SuggestionState } from 'src/suggestions/domain/models/Suggestion'
 
 abstract class SuggestionsPersistence implements Persistence {
   getServiceName(): string {

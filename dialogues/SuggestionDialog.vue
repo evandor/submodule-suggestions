@@ -22,7 +22,7 @@
           <q-btn label="Ignore" size="sm" color="negative" v-close-popup @click="ignoreSuggestion()">
             <q-tooltip class="tooltip-small" :delay="500">This suggestion will not show up again</q-tooltip>
           </q-btn>
-          <q-btn label="Check" size="sm" color="warning" v-close-popup @click="addSuggestion()">
+          <q-btn :label="suggestion.applyLabel" size="sm" color="warning" v-close-popup @click="applySuggestion()">
             <q-tooltip class="tooltip-small" :delay="500"
               >Get Details about this suggestion and decide what to do
             </q-tooltip>
@@ -34,11 +34,14 @@
 </template>
 
 <script lang="ts" setup>
+import { doc, setDoc } from 'firebase/firestore'
 import { useDialogPluginComponent } from 'quasar'
 import { useUtils } from 'src/core/services/Utils'
+import FirebaseServices from 'src/services/firebase/FirebaseServices'
 import NavigationService from 'src/services/NavigationService'
-import { Suggestion } from 'src/suggestions/models/Suggestion'
+import { Suggestion } from 'src/suggestions/domain/models/Suggestion'
 import { useSuggestionsStore } from 'src/suggestions/stores/suggestionsStore'
+import { useAuthStore } from 'stores/authStore'
 import { PropType } from 'vue'
 import { useRouter } from 'vue-router'
 
@@ -46,7 +49,6 @@ defineEmits([...useDialogPluginComponent.emits])
 
 const props = defineProps({
   suggestion: { type: Object as PropType<Suggestion>, required: true },
-  fromPanel: { type: Boolean, default: false },
 })
 
 const { dialogRef, onDialogHide, onDialogCancel } = useDialogPluginComponent()
@@ -58,9 +60,9 @@ const { inBexMode } = useUtils()
 const delayDecision = () => useSuggestionsStore().updateSuggestionState(props.suggestion.id, 'DECISION_DELAYED')
 const ignoreSuggestion = () => useSuggestionsStore().updateSuggestionState(props.suggestion.id, 'IGNORED')
 
-const addSuggestion = async () => {
+const applySuggestion = async () => {
   const res = props.suggestion
-  console.log('res', res, props.fromPanel)
+  console.log('res', res)
   //if (props.fromPanel) {
   switch (res.type) {
     case 'FEATURE':
@@ -80,8 +82,20 @@ const addSuggestion = async () => {
     case 'URL':
       console.log('hier2')
       if (props.suggestion.url) {
+        await useSuggestionsStore().updateSuggestionState(res.id, 'CHECKED')
         NavigationService.openOrCreateTab([props.suggestion?.url], undefined, [], true)
-        useSuggestionsStore().removeSuggestion(res.id)
+        // useSuggestionsStore().removeSuggestion(res.id)
+      }
+      break
+    case 'TABSET_SHARED':
+      if (res.url.startsWith('invitations://')) {
+        await useSuggestionsStore().updateSuggestionState(res.id, 'CHECKED')
+        const invitationId = res.url.split('invitations://')[1]
+        await setDoc(
+          doc(FirebaseServices.getFirestore(), `users/${useAuthStore().user.uid}/invitations/${invitationId}`),
+          { state: 'accepted' },
+          { merge: true },
+        )
       }
       break
     default:

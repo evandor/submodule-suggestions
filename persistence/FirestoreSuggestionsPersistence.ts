@@ -1,6 +1,6 @@
-import { collection, deleteDoc, doc, getDoc, getDocs, setDoc } from 'firebase/firestore'
+import { collection, deleteDoc, doc, DocumentData, getDoc, getDocs, setDoc } from 'firebase/firestore'
 import FirebaseServices from 'src/services/firebase/FirebaseServices'
-import { Suggestion, SuggestionState } from 'src/suggestions/models/Suggestion'
+import { Suggestion, SuggestionState } from 'src/suggestions/domain/models/Suggestion'
 import SuggestionsPersistence from 'src/suggestions/persistence/SuggestionsPersistence'
 import { useAuthStore } from 'stores/authStore'
 
@@ -52,6 +52,15 @@ class FirestoreSuggestionsPersistence extends SuggestionsPersistence {
       return Promise.resolve(suggestion)
     }
     return Promise.reject('could not update suggestion')
+  }
+
+  async clearAll(): Promise<void> {
+    const suggestions = await getDocs(suggestionsCollection())
+    suggestions.forEach((doc: DocumentData) => {
+      console.log('deleting', doc.data())
+      deleteDoc(doc.ref)
+    })
+    return Promise.resolve()
   }
 }
 

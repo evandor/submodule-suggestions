@@ -1,6 +1,6 @@
 import { IDBPDatabase, openDB } from 'idb'
 import _ from 'lodash'
-import { Suggestion, SuggestionState } from 'src/suggestions/models/Suggestion'
+import { Suggestion, SuggestionState } from 'src/suggestions/domain/models/Suggestion'
 import SuggestionsPersistence from 'src/suggestions/persistence/SuggestionsPersistence'
 
 class IndexedDbSuggestionsPersistence extends SuggestionsPersistence {

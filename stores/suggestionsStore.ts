@@ -1,6 +1,6 @@
 import _ from 'lodash'
 import { defineStore } from 'pinia'
-import { Suggestion, SuggestionState } from 'src/suggestions/models/Suggestion'
+import { Suggestion, SuggestionState } from 'src/suggestions/domain/models/Suggestion'
 import SuggestionsPersistence from 'src/suggestions/persistence/SuggestionsPersistence'
 import { computed, ref } from 'vue'
 
@@ -97,7 +97,9 @@ export const useSuggestionsStore = defineStore('suggestions', () => {
   })
 
   const clearAll = () => {
-    storage.clearAll()
+    storage.clearAll().then(() => {
+      suggestions.value = []
+    })
   }
 
   return {

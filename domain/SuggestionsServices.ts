@@ -1,4 +1,4 @@
-import { Suggestion, SuggestionState } from 'src/suggestions/models/Suggestion'
+import { Suggestion, SuggestionState } from 'src/suggestions/domain/models/Suggestion'
 
 export function useSuggestionsService() {
   const hasSuggestionsInState = (suggestions: Suggestion[], states: SuggestionState[]): boolean => {

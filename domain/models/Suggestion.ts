@@ -34,6 +34,7 @@ export class Suggestion {
   public img: string | undefined = undefined
   public data: object = {}
   public created: number | undefined = undefined
+  public applyLabel: string = 'check'
 
   static staticSuggestions: Suggestion[] = [
     new Suggestion(
@@ -92,11 +93,6 @@ export class Suggestion {
 
   setImage(img: string): Suggestion {
     this.img = img
-    return this
-  }
-
-  setData(data: object): Suggestion {
-    this.data = data
     return this
   }
 
