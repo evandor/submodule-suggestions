@@ -39,7 +39,7 @@ class IndexedDbSuggestionsPersistence extends SuggestionsPersistence {
       (s: Suggestion) => s.state === 'NEW' || s.state === 'IGNORED' || s.state === 'DECISION_DELAYED',
     )
     if (foundAsNewDelayedOrIgnored) {
-      // && suggestion.state === SuggestionState.NEW) {
+      // && suggestion.state === 'NEW') {
       if (foundAsNewDelayedOrIgnored.state === 'IGNORED' && suggestion.type === 'RESTART') {
         console.log('setting existing restart suggestion to state NEW again')
         foundAsNewDelayedOrIgnored.state = 'NEW'
