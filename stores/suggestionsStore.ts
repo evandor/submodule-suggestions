@@ -16,7 +16,7 @@ export const useSuggestionsStore = defineStore('suggestions', () => {
   }
 
   async function loadSuggestionsFromDb() {
-    console.log('loading suggestions')
+    //console.log('loading suggestions')
     if (storage) {
       suggestions.value = await storage.getSuggestions()
     }
