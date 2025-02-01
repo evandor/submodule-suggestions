@@ -23,6 +23,7 @@ export type SuggestionType =
 export type StaticSuggestionIdent =
   | 'TRY_TAB_DETAILS_FEATURE'
   | 'TRY_BOOKMARKS_FEATURE'
+  | 'TRY_OPENTABS_FEATURE'
   | 'TRY_SPACES_FEATURE'
   | 'TRY_NEWEST_TABS_FEATURE'
   | 'RELEASE_NOTES_AVAILABLE'
@@ -51,6 +52,13 @@ export class Suggestion {
       '/features/spaces',
       'FEATURE',
     ).setImage('o_space_dashboard'),
+    new Suggestion(
+      'TRY_OPENTABS_FEATURE',
+      'Want to try a new feature?',
+      "Check out the optional 'Open Tabs' feature and manage your browser tabs in the sidepanel",
+      '/features/tabslist',
+      'FEATURE',
+    ).setImage('o_playlist_add'),
     new Suggestion(
       'TRY_NEWEST_TABS_FEATURE',
       'Want to try a new feature?',
