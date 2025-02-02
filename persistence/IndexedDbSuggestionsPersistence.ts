@@ -36,7 +36,8 @@ class IndexedDbSuggestionsPersistence extends SuggestionsPersistence {
     // console.log("%csuggestions from db", "color:red", suggestions)
     const foundAsNewDelayedOrIgnored = _.find(
       suggestions,
-      (s: Suggestion) => s.state === 'NEW' || s.state === 'IGNORED' || s.state === 'DECISION_DELAYED',
+      (s: Suggestion) =>
+        s.id === suggestion.id && (s.state === 'NEW' || s.state === 'IGNORED' || s.state === 'DECISION_DELAYED'),
     )
     if (foundAsNewDelayedOrIgnored) {
       // && suggestion.state === 'NEW') {
