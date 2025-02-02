@@ -56,7 +56,7 @@ export class Suggestion {
       'TRY_OPENTABS_FEATURE',
       'Want to try a new feature?',
       "Check out the optional 'Open Tabs' feature and manage your browser tabs in the sidepanel",
-      '/features/tabslist',
+      '/features/open_tabs',
       'FEATURE',
     ).setImage('o_playlist_add'),
     new Suggestion(
