@@ -33,7 +33,7 @@ class IndexedDbSuggestionsPersistence extends SuggestionsPersistence {
 
   async addSuggestion(suggestion: Suggestion): Promise<void> {
     const suggestions = await this.getSuggestions()
-    // console.log("%csuggestions from db", "color:red", suggestions)
+    //console.log('%csuggestions from db', 'color:red', suggestions)
     const foundAsNewDelayedOrIgnored = _.find(
       suggestions,
       (s: Suggestion) =>
@@ -41,7 +41,8 @@ class IndexedDbSuggestionsPersistence extends SuggestionsPersistence {
     )
     if (foundAsNewDelayedOrIgnored) {
       // && suggestion.state === 'NEW') {
-      if (foundAsNewDelayedOrIgnored.state === 'IGNORED' && suggestion.type === 'RESTART') {
+      if (foundAsNewDelayedOrIgnored.state === 'IGNORED') {
+        //} && suggestion.type === 'RESTART') {
         console.log('setting existing restart suggestion to state NEW again')
         foundAsNewDelayedOrIgnored.state = 'NEW'
         this.db.put(this.STORE_IDENT, foundAsNewDelayedOrIgnored, foundAsNewDelayedOrIgnored.id)
@@ -53,14 +54,15 @@ class IndexedDbSuggestionsPersistence extends SuggestionsPersistence {
     }
     const found = _.find(suggestions, (s: Suggestion) => s.url === suggestion.url)
     if (!found) {
+      console.warn('===', suggestion)
       await this.db.add(this.STORE_IDENT, suggestion, suggestion.id)
       return Promise.resolve()
     }
-    return Promise.reject('suggestion already exists')
+    return Promise.reject(`suggestion already exists for url '${suggestion.url}'`)
   }
 
-  removeSuggestion(ident: string): Promise<any> {
-    return this.db.delete(this.STORE_IDENT, ident)
+  removeSuggestion(id: string): Promise<any> {
+    return this.db.delete(this.STORE_IDENT, id)
   }
 
   async setSuggestionState(suggestionId: string, state: SuggestionState): Promise<Suggestion> {

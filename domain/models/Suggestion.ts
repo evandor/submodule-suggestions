@@ -11,14 +11,19 @@ export type SuggestionState =
 
 export type SuggestionType =
   | 'RSS'
-  | 'REDIRECT_HAPPENED_FOR_TAB'
-  | 'REDIRECT_HAPPENED_FOR_BOOKMARK'
-  | 'CONTENT_CHANGE'
+  // | 'REDIRECT_HAPPENED_FOR_TAB'
+  // | 'REDIRECT_HAPPENED_FOR_BOOKMARK'
+  // | 'CONTENT_CHANGE'
+  //| 'USE_EXTENSION'
+  // | 'RESTART'
+  // suggest a not-yet-used feature
   | 'FEATURE'
   | 'URL'
-  | 'RESTART'
-  | 'TABSET_SHARED'
-  | 'USE_EXTENSION'
+  | 'TABSET_SHARED' // suggest accepting a shared tabset
+
+  // suggest switching tabset to a better matching one. Refers to a window and will be deleted when a new
+  // suggestion is about to be added.
+  | 'SWITCH_TABSET'
 
 export type StaticSuggestionIdent =
   | 'TRY_TAB_DETAILS_FEATURE'
@@ -29,6 +34,7 @@ export type StaticSuggestionIdent =
   | 'RELEASE_NOTES_AVAILABLE'
   | 'RESTART_SUGGESTED'
   | 'USE_EXTENSION_SUGGESTION'
+  | 'SWITCH_TABSET'
 
 export class Suggestion {
   public state: SuggestionState
@@ -36,6 +42,7 @@ export class Suggestion {
   public data: object = {}
   public created: number | undefined = undefined
   public applyLabel: string = 'check'
+  public windowId: number | undefined = undefined
 
   static staticSuggestions: Suggestion[] = [
     new Suggestion(
@@ -72,13 +79,13 @@ export class Suggestion {
     //   RELEASE_NOTES_URL,
     //   SuggestionType.URL)
     //   .setImage('o_schedule'),
-    new Suggestion(
-      'RESTART_SUGGESTED',
-      'Restart Required',
-      'Please restart tabsets by clicking the button',
-      '',
-      'RESTART',
-    ).setImage('o_schedule'),
+    // new Suggestion(
+    //   'RESTART_SUGGESTED',
+    //   'Restart Required',
+    //   'Please restart tabsets by clicking the button',
+    //   '',
+    //   'RESTART',
+    // ).setImage('o_schedule'),
     new Suggestion(
       'USE_EXTENSION_SUGGESTION',
       'Check out Tabsets Extension',
@@ -101,6 +108,16 @@ export class Suggestion {
 
   setImage(img: string): Suggestion {
     this.img = img
+    return this
+  }
+
+  setState(state: SuggestionState): Suggestion {
+    this.state = state
+    return this
+  }
+
+  setWindowId(windowId: number): Suggestion {
+    this.windowId = windowId
     return this
   }
 
