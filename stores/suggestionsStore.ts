@@ -1,6 +1,6 @@
 import _ from 'lodash'
 import { defineStore } from 'pinia'
-import { Suggestion, SuggestionState } from 'src/suggestions/domain/models/Suggestion'
+import { Suggestion, SuggestionState, SuggestionType } from 'src/suggestions/domain/models/Suggestion'
 import SuggestionsPersistence from 'src/suggestions/persistence/SuggestionsPersistence'
 import { computed, ref } from 'vue'
 
@@ -22,8 +22,19 @@ export const useSuggestionsStore = defineStore('suggestions', () => {
     }
   }
 
+  async function cleanup(typesToClean: SuggestionType[]) {
+    const allSuggestions = await storage.getSuggestions()
+    allSuggestions.forEach((s: Suggestion) => {
+      if (typesToClean.indexOf(s.type) >= 0 && s.state !== 'IGNORED') {
+        console.log(`cleaning up suggestion ${s.id}`)
+        storage.removeSuggestion(s.id)
+      }
+    })
+  }
+
   async function addSuggestion(s: Suggestion | undefined) {
-    console.debug('about to add suggestion', s)
+    console.debug('about to add suggestion...', s)
+    await cleanup(['SWITCH_TABSET'])
     if (!s) {
       return Promise.reject('suggestion undefined')
     }
@@ -34,7 +45,7 @@ export const useSuggestionsStore = defineStore('suggestions', () => {
       return Promise.resolve(true)
     } catch (err) {
       console.log('rejected adding due to: ', err)
-      return Promise.reject(err)
+      return Promise.resolve(false)
     }
   }
 
