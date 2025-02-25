@@ -54,7 +54,6 @@ class IndexedDbSuggestionsPersistence extends SuggestionsPersistence {
     }
     const found = _.find(suggestions, (s: Suggestion) => s.url === suggestion.url)
     if (!found) {
-      console.warn('===', suggestion)
       await this.db.add(this.STORE_IDENT, suggestion, suggestion.id)
       return Promise.resolve()
     }
