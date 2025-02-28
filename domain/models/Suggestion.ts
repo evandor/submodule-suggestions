@@ -14,7 +14,7 @@ export type SuggestionType =
   // | 'REDIRECT_HAPPENED_FOR_TAB'
   // | 'REDIRECT_HAPPENED_FOR_BOOKMARK'
   // | 'CONTENT_CHANGE'
-  | 'USE_EXTENSION'
+  | 'USE_EXTENSION' // pro only
   // | 'RESTART'
   // suggest a not-yet-used feature
   | 'FEATURE'
