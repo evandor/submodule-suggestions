@@ -85,7 +85,7 @@ export const useSuggestionsStore = defineStore('suggestions', () => {
   }
 
   const getSuggestions = computed(() => {
-    return (states: SuggestionState[]) => {
+    return (states: SuggestionState[]): Suggestion[] => {
       // console.log('checking for states', states)
       return _.filter(suggestions.value, (s: Suggestion) => {
         for (const state of states) {
