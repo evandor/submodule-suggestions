@@ -68,6 +68,7 @@ class IndexedDbSuggestionsPersistence extends SuggestionsPersistence {
     console.log('setting suggestion to state', suggestionId, state)
     const s: Suggestion = await this.db.get(this.STORE_IDENT, suggestionId)
     if (s) {
+      console.log('setting suggestion to state', suggestionId, state)
       s.state = state
       await this.db.put(this.STORE_IDENT, s, suggestionId)
       return Promise.resolve(s)

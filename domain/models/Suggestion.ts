@@ -41,7 +41,7 @@ export class Suggestion {
   public img: string | undefined = undefined
   public data: object = {}
   public created: number | undefined = undefined
-  public applyLabel: string = 'check'
+  public applyLabel: string = 'Yes'
   public windowId: number | undefined = undefined
 
   static staticSuggestions: Suggestion[] = [
@@ -49,28 +49,28 @@ export class Suggestion {
       'TRY_BOOKMARKS_FEATURE',
       'Want to try a new feature?',
       "Maybe you want to try the optional 'Bookmarks' feature?",
-      '/features/bookmarks',
+      '/mainpanel/features/bookmarks',
       'FEATURE',
     ).setImage('o_bookmarks'),
     new Suggestion(
       'TRY_SPACES_FEATURE',
       'Want to try a new feature?',
       "Check out the optional 'Spaces' feature and get another level of organization",
-      '/features/spaces',
+      '/mainpanel/features/spaces',
       'FEATURE',
     ).setImage('o_space_dashboard'),
     new Suggestion(
       'TRY_OPENTABS_FEATURE',
       'Want to try a new feature?',
       "Check out the optional 'Open Tabs' feature and manage your browser tabs in the sidepanel",
-      '/features/open_tabs',
+      '/mainpanel/features/open_tabs',
       'FEATURE',
     ).setImage('o_playlist_add'),
     new Suggestion(
       'TRY_NEWEST_TABS_FEATURE',
       'Want to try a new feature?',
       'Activate a view with your latest tabs',
-      '/features/newest_tabs',
+      '/mainpanel/features/newest_tabs',
       'FEATURE',
     ).setImage('o_schedule'),
     // new Suggestion(StaticSuggestionIdent.RELEASE_NOTES_AVAILABLE,
