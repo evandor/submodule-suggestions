@@ -48,6 +48,7 @@ import { Suggestion } from 'src/suggestions/domain/models/Suggestion'
 import { useSuggestionsStore } from 'src/suggestions/stores/suggestionsStore'
 import { SelectTabsetCommand } from 'src/tabsets/commands/SelectTabsetCommand'
 import { useTabsetsStore } from 'src/tabsets/stores/tabsetsStore'
+import { useAuthStore } from 'stores/authStore'
 import { PropType } from 'vue'
 import { useRouter } from 'vue-router'
 
@@ -103,17 +104,6 @@ const applySuggestion = async () => {
           { merge: true },
         )
       }
-      break
-    case 'SWITCH_TABSET':
-      if (res.url.startsWith('tabset://')) {
-        const urlSplit = res.url.split('tabset://')[1]!.split('/')
-        console.log('urlSplit', urlSplit)
-        const tabset = useTabsetsStore().getTabset(urlSplit[0]!)
-        if (tabset) {
-          await useCommandExecutor().executeFromUi(
-            new SelectTabsetCommand(tabset.id, urlSplit[1] !== 'undefined' ? urlSplit[1] : undefined),
-          )
-        }
       break
     case 'SWITCH_TABSET':
       if (res.url.startsWith('tabset://')) {
